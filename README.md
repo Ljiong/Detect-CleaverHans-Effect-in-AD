@@ -5,6 +5,7 @@
 ### Data preparation:
 
 1. Run the notebook on Colab and uploaded the datasets to the google Drive. You can also run it locally and change the path of the datsets and model config path.
+
 ![datapath](/demopicture/path3.png)
 
 ### Model preparation: 
@@ -13,7 +14,9 @@
 2. Download anomalib and install it: https://github.com/openvinotoolkit/anomalib.git
 
 3. I implemnented padim model and stfpm model with customed datsets. To do that, copy the model config and modify the copied config with customed parameters.
-The customed configs are also in the github. Just download them and put it in the right folder. Pay attention: in config file, you need to change the normal data path and abnormal data path to your data location ![model file structure1](/demopicture/path1.png) ![structure](/demopicture/path2.png)
+The customed configs are also in the github. Just download them and put it in the right folder. Pay attention: in config file, you need to change the normal data path and abnormal data path to your data location 
+
+![model file structure1](/demopicture/path1.png) ![structure](/demopicture/path2.png)
 
 ### Inference and display
 There are several types of heatmap which are indicated the anomalous parts
