@@ -21,6 +21,8 @@ The customed configs are also in the github. Just download them and put it in th
 ### Inference and display
 There are several types of heatmap which are indicated the anomalous parts
 
+![prediction](/demopicture/pred1.png) ![heatmap1](/demopicture/heat1.png) ![heatmap2](/demopicture/heat2.png)
+
 ### A few things need to be considered:
 1. In ped2 dataset, all test vidos are anomalous, but not all frames contain anomalous.(eg. video1:000.png and 090.png) We should consider to extract useful images during the preprocess.
 2. Model might take a quite long time for the training.(I took 1.5h to train 2*5*180*0.8(?) images)
