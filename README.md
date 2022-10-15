@@ -9,6 +9,7 @@
 
 ### Model preparation: 
 (next few steps are already mentioned in notebook, so just run the notebook step by step if you run the notebook on Colab.)
+
 2. Download anomalib and install it: https://github.com/openvinotoolkit/anomalib.git
 
 3. I implemnented padim model and stfpm model with customed datsets. To do that, copy the model config and modify the copied config with customed parameters.
