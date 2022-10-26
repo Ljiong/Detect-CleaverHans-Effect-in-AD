@@ -16,7 +16,7 @@ from DETR import main, plot_box  # DETR.py
 from Blur import background_blurrer  # Blur.py
 
 
-def blur_dataset(path: str) -> None:
+def blur_dataset(path: str, save_od=False) -> None:
     """Blurs images of an entire directory
 
     Args:
@@ -30,27 +30,34 @@ def blur_dataset(path: str) -> None:
     if not os.path.exists(join(path, "blur/")):
         os.mkdir(join(path, "blur/"))
     imgpath = join(path, "blur/")
+
     for img in tqdm(onlypic):
+        error_count = 0
         ### use object detection
-        scores, boxes = main(join(path, img))
+        try:
+            scores, boxes = main(join(path, img))
 
-        # open PIL.Image
-        pil_img = Image.open(join(path, img))
-        # save OD image with _od end tag next to normal images
-        plot_box(
-            pil_img,
-            scores,
-            boxes,
-            join(imgpath, img.split(".")[0] + "_od." + img.split(".")[1]),
-        )
+            # open PIL.Image
+            pil_img = Image.open(join(path, img))
+            # save OD image with _od end tag next to normal images
 
-        ## apply background blur
-        blurred_img_dct = background_blurrer(pil_img, boxes)
+            plot_box(
+                pil_img,
+                scores,
+                boxes,
+                save_od,
+            )  # use for save: join(imgpath, img.split(".")[0] + "_od." + img.split(".")[1])
 
-        img_blurred = Image.fromarray(blurred_img_dct["masked"], "RGB")
-        img_blurred.save(join(imgpath, img))
+            ## apply background blur
+            blurred_img_dct = background_blurrer(pil_img, boxes)
+
+            img_blurred = Image.fromarray(blurred_img_dct["masked"], "RGB")
+            img_blurred.save(join(imgpath, img))
+        except:
+            error_count += 1
+    print(f"### There were {error_count} erroneous images that were not converted!")
 
 
 if __name__ == "__main__":
     p = "imagenette2-320/train/n02102040"
-    blur_dataset(p)
+    blur_dataset(p, save_od="lol")

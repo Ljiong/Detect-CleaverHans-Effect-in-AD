@@ -292,7 +292,7 @@ def plot_box(im, scores, boxes, save=None):
         boxes (list): list of bounding boxes from DETR
         save (str, optional): If path specified, plot is saved INSTEAD of shown
     """
-    plt.figure(figsize=(6, 6))
+    plt.figure()
     plt.imshow(im)
     ax = plt.gca()
     for p, (xmin, ymin, xmax, ymax), c in zip(scores, boxes.tolist(), COLORS * 100):

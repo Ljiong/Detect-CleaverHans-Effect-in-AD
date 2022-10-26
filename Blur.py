@@ -15,6 +15,8 @@ from torchvision.models import resnet50
 import torchvision.transforms as T
 import numpy
 
+from DETR import main, plot_box
+
 torch.set_grad_enabled(False)
 device = "cpu"
 
@@ -22,24 +24,22 @@ import pickle
 
 
 def boxinator(boxes, image):
-
+    h, w, c = np.array(image).shape
     boxes = np.around(boxes).astype(int)
 
     box = np.array([np.array(image)[:, :, 0] * 0] * len(boxes), dtype=bool)  # 3D tensor
 
     for i in range(len(boxes)):
         # now we are looking at box i
+        xmin, ymin, xmax, ymax = np.array(np.round_(boxes[i]), dtype=int)
 
-        box[i][np.array(boxes[i][0]) : np.array(boxes[i][2])][
-            np.array(boxes[i][1]) : np.array(boxes[i][3])
-        ] = 1
+        box[i][ymin:ymax, xmin:xmax] = 1
 
     bbl_mask = np.array(image)[:, :, 0] * 0
 
     for mask in box:
         bbl_mask += mask
         bbl_mask[bbl_mask > 1] = 1
-
     bbl_mask[bbl_mask > 1] = 1
     return np.squeeze(bbl_mask)
 
@@ -54,7 +54,7 @@ def background_blurrer(image, bbl):
 
     temp_img = image
     temp_img = cv2.blur(
-        np.array(temp_img).astype(np.uint8), (200, 200), cv2.BORDER_DEFAULT
+        np.array(temp_img).astype(np.uint8), (20, 20), cv2.BORDER_DEFAULT
     )
 
     img_tensor = np.array(image)
@@ -79,13 +79,16 @@ def background_blurrer(image, bbl):
 
 if __name__ == "__main__":
 
-    file = open("pickled_boxes", "rb")
-    data = pickle.load(file)
-    file.close()
+    path = "imagenette2-320/train/n02102040/n02102040_8463.JPEG"
 
-    im = Image.open("imagenette2-320/train/n02102040/n02102040_8463.JPEG")
-    a = background_blurrer(im, data)
+    ### DETR
+    scores, boxes = main(path)
+    im = Image.open(path)
+    plot_box(im, scores, boxes, "OD-output.jpg")
+    breakpoint()
+    ## Blur
+    a = background_blurrer(im, boxes)
     img = Image.fromarray(a["masked"], "RGB")
-    img.save("masked.png")
+    img.save("masked.jpg")
     img_blur = Image.fromarray(a["blurred"], "RGB")
-    img_blur.save("blurred.png")
+    img_blur.save("blurred.jpg")
